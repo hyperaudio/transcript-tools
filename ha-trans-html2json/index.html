@@ -1,0 +1,49 @@
+<html>
+<head>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <style>
+  textarea {
+    font-family: "Courier New", Courier, monospace;
+  }
+  </style>
+</head>
+<body>
+<textarea rows="60" cols="90" id="input"></textarea>
+<button id="transform">Transform to JSON -></button>
+<textarea rows="60" cols="90" id="output"></textarea>
+<div id="transcript-html" style="display:none"></div>
+<script>
+  $('#transform').click(function(){
+
+    $('#transcript-html').html($('#input').val());
+
+    var json = {};
+
+    $('section').each(function(i,section) {
+      json.section = {
+        paragraph: []
+      };
+
+      $(section).find('p').each(function(j,para) {
+        var timeCode = $(para).data('tc');
+        var words = [];
+        $(para).find('a').each(function(k,word) {
+          words.push({
+            "start": $(word).data('m'),
+            "duration": $(word).data('d'),
+            "text": $(word).text().replace(" ","")
+          });
+        });
+
+        json.section.paragraph.push({
+          //"timeCode" : timeCode,
+          "words" : words
+        });
+      });
+    });
+    $('#output').text(JSON.stringify(json));
+  });
+
+</script>
+</body>
+</html>
